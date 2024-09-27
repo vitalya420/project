@@ -5,5 +5,13 @@ services:
     build:
       context: ./api
     ports:
-      - "8080:8080"
+      - "8080"
 
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8070:80"
+    depends_on:
+      - api
