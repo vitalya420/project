@@ -9,13 +9,20 @@ pipeline {
         stage('Stop Existing Containers') {
             steps {
                 script {
-                    sh 'podman-compose down'
+                    def runningContainers = sh(script: 'podman ps -q', returnStdout: true).trim()
+                    if (runningContainers) {
+                        echo 'Stopping existing containers...'
+                        sh 'podman-compose down'
+                    } else {
+                        echo 'No running containers to stop.'
+                    }
                 }
             }
         }
         stage('Build and Start New Containers') {
             steps {
                 script {
+                    echo 'Building and starting new containers...'
                     sh 'podman-compose up --build -d'
                 }
             }
