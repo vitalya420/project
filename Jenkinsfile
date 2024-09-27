@@ -2,17 +2,14 @@ pipeline {
     agent any
 
     stages {
-        stage('Stop Existing Containers') {
+        stage('Set Working Directory') {
             steps {
-                script {
-                    sh 'podman-compose down'
-                }
-            }
-        }
-        stage('Build and Start New Containers') {
-            steps {
-                script {
-                    sh 'podman-compose up --build -d'
+                dir("${env.HOME}/project") {
+                    script {
+                        sh 'podman-compose down'
+                        
+                        sh 'podman-compose up --build -d'
+                    }
                 }
             }
         }
